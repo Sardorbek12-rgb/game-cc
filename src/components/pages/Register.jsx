@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-import API from "../api"; // axios instance
-import FloatingButtons from "../floatingbuttons/FloatingButtons";
+import API from "../api";
+import FloatingButtons from '../floatingbuttons/FloatingButtons';
 import "../assets/css/app.min.css";
 import "../assets/css/style.css";
 import "../assets/css/Burger.css";
 import "../assets/css/GameClub.css";
+
 import { useLang } from "../translator/Translator";
 
 export default function Register() {
@@ -27,29 +28,27 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const formData = new FormData();
+        formData.append("username", form.username);
+        formData.append("password", form.password);
+        formData.append("phone_number", form.phone_number);
+
         try {
             const res = await API.post("api/accounts/register/", form, {
                 headers: { "Content-Type": "application/json" },
             });
-
             alert("✅ Регистрация прошла успешно");
-            console.log("Server response:", res.data);
-
             navigate("/login");
         } catch (err) {
-            console.error("Register error:", err.response?.data || err.message);
-            alert(
-                "❌ Ошибка регистрации: " +
-                    (err.response?.data?.detail || err.message)
-            );
+            console.error(err.response?.data || err);
+            alert("❌ Ошибка регистрации");
         }
     };
 
     return (
         <div>
             <FloatingButtons />
-
-            {/* Header */}
+            {/* Шапка страницы */}
             <div
                 className="breadcumb-wrapper"
                 data-bg-src="assets/img/bg/breadcumb-bg.jpg"
@@ -57,36 +56,31 @@ export default function Register() {
                 <div className="container">
                     <div className="breadcumb-content">
                         <h1 className="breadcumb-title">
+                            <br />
                             {lang === "uz" ? "Roʻyxatdan oʻtish" : "Регистрация"}
                         </h1>
                     </div>
                 </div>
             </div>
 
-            {/* Form */}
+            {/* Форма регистрации */}
             <form className="form-container" onSubmit={handleSubmit}>
                 <div className="input-group">
                     <label>
-                        {lang === "uz"
-                            ? "Foydalanuvchi nomi"
-                            : "Имя пользователя"}
+                        {lang === "uz" ? "Foydalanuvchi nomi" : "Имя пользователя"}
                     </label>
                     <input
                         type="text"
                         name="username"
                         placeholder={
-                            lang === "uz"
-                                ? "Foydalanuvchi nomi"
-                                : "Имя пользователя"
+                            lang === "uz" ? "Foydalanuvchi nomi" : "Имя пользователя"
                         }
                         value={form.username}
                         onChange={handleChange}
                         required
                     />
                 </div>
-
                 <br />
-
                 <div className="input-group">
                     <label>{lang === "uz" ? "Parol" : "Пароль"}</label>
                     <div className="password-container">
@@ -108,27 +102,19 @@ export default function Register() {
                         </button>
                     </div>
                 </div>
-
                 <br />
-
                 <div className="input-group">
-                    <label>
-                        {lang === "uz" ? "Telefon raqami" : "Телефон"}
-                    </label>
+                    <label>{lang === "uz" ? "Telefon raqami" : "Телефон"}</label>
                     <input
                         type="tel"
                         name="phone_number"
-                        placeholder={
-                            lang === "uz" ? "Telefon raqami" : "Телефон"
-                        }
+                        placeholder={lang === "uz" ? "Telefon raqami" : "Телефон"}
                         value={form.phone_number}
                         onChange={handleChange}
                         required
                     />
                 </div>
-
                 <br />
-
                 <div className="checkbox-group">
                     <input type="checkbox" id="agreement" defaultChecked />
                     <label htmlFor="agreement">
@@ -136,17 +122,12 @@ export default function Register() {
                             ? "Men ommaviy taklif shartlarini qabul qilaman"
                             : "Я принимаю условия публичной оферты"}
                         <br />
-                        <a href="/login">
-                            {lang === "uz"
-                                ? "Login orqali kiring"
-                                : "Зайти через Вход"}
-                        </a>
+                        <a href="/login">{lang === "uz" ? "Login orqali kiring" : "Зайти через Вход"}</a>
                     </label>
                 </div>
+
                 <button type="submit" className="button">
-                    {lang === "uz"
-                        ? "Roʻyxatdan oʻtish"
-                        : "Регистрация →"}
+                    {lang === "uz" ? "Roʻyxatdan oʻtish" : "Регистрация →"}
                 </button>
             </form>
         </div>

@@ -12,15 +12,6 @@
 
 // export default API;
 
-import axios from "axios";
-
-const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/", // yoki sening backend URL’ing
-  withCredentials: true, // agar cookie ishlatsa
-});
-
-export default API;
-
 
 // import axios from "axios";
 
@@ -38,6 +29,32 @@ export default API;
 
 // export default API;
 
+
+
+
+
+import axios from "axios";
+
+const API = axios.create({
+  baseURL: "http://127.0.0.1:8000/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("access");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export default API;
+
 // import axios from 'axios';
 
 // const API = axios.create({
@@ -52,29 +69,5 @@ export default API;
 //     }
 //     return config;
 // });
-
-// export default API;
-
-
-
-// import axios from "axios";
-
-// const API = axios.create({
-//   baseURL: "http://127.0.0.1:8000/",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-// });
-
-// API.interceptors.request.use(
-//   (config) => {
-//     const token = localStorage.getItem("access");
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
 
 // export default API;
